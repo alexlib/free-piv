@@ -5,25 +5,33 @@
 
 int main(int argc, char *argv[]){
 	
-	// Initialize an image.
+	// Declare matrices for the first and second images.
 	cv::Mat image_01;
+	cv::Mat image_02;
 	
 	// Define the region edges
-	const unsigned int sub_region_row = 600;
-	const unsigned int sub_region_col = 590;
+	const unsigned int grid_point_row = 600;
+	const unsigned int grid_point_col = 590;
 	
 	// Define subregion dimensions
 	const unsigned int sub_region_height = 128;
 	const unsigned int sub_region_width  = 128;
 	
-	// Read the image.
-	image_01 = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
+	// Read the first image.
+	image_01 = cv::imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
 	
-	// Declare the subregion matrices.
+	// Read the second image
+	image_02 = cv::imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
+	
+	// Declare matrices to hold the interrogation regions.
 	cv::Mat sub_region_01(sub_region_height, sub_region_width, image_01.type());
+	cv::Mat sub_region_02(sub_region_height, sub_region_width, image_02.type());
 	
 	// Extract the first subregion.
-	extract_subregion(image_01, sub_region_01, sub_region_row, sub_region_col, sub_region_height, sub_region_width);
+	extract_subregion(image_01, sub_region_01, grid_point_row, grid_point_col, sub_region_height, sub_region_width);
+	
+	// Extract the second subregion
+	extract_subregion(image_02, sub_region_02, grid_point_row, grid_point_col, sub_region_height, sub_region_width);
 	
 	// Create a window for displaying the full image.
 	cv::namedWindow("full_image");
