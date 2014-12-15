@@ -28,10 +28,16 @@ int main(int argc, char *argv[]){
 	cv::Mat sub_region_02(sub_region_height, sub_region_width, image_02.type());
 	
 	// Extract the first subregion.
-	extract_subregion(image_01, sub_region_01, grid_point_row, grid_point_col, sub_region_height, sub_region_width);
+	piv::extract_subregion(image_01, sub_region_01, grid_point_row, grid_point_col, sub_region_height, sub_region_width);
 	
 	// Extract the second subregion
-	extract_subregion(image_02, sub_region_02, grid_point_row, grid_point_col, sub_region_height, sub_region_width);
+	// extract_subregion(image_02, sub_region_02, grid_point_row, grid_point_col, sub_region_height, sub_region_width);
+	
+	// Calculate the standard deviation of a Gaussian function.
+	double std_x = piv::find_gaussian_std((double)64, (double)32);
+	
+	// Write the output to screen
+	std::cout << "Standard deviation: " << std_x << '\n';
 	
 	// Create a window for displaying the full image.
 	cv::namedWindow("full_image");
