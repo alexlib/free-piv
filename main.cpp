@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
 	const unsigned int sub_region_width  = 128;
 	
 	// Read the image.
-	image_01 = cv::imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
+	image_01 = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
 	
 	// Declare the subregion matrices.
 	cv::Mat sub_region_01(sub_region_height, sub_region_width, image_01.type());
