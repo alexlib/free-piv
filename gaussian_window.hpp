@@ -9,8 +9,10 @@ namespace piv{
 	// This function approximates an area integral using the Trapezoidal rule.
 	// The vector x must be increasing, but its values need not be evenly spaced.
 	//double trapz(double x[], double y[], const int num_elements)
-	double trapz(std::vector<double> x, std::vector<double> y, const int num_elements){
-		
+	double trapz(std::vector<double> x, \
+				 std::vector<double> y, \
+				 const int num_elements)
+	{	
 		// Initialize the summed area as the first element in the y array
 		float sum = 0;
 		
@@ -35,7 +37,9 @@ namespace piv{
 	// This function calculates the standard deviation of a Gaussian function
 	// whose area approximates the area under a rectangular region of a given length
 	// and a height of one.
-	double find_gaussian_std(const int dimension_length_pixels, const double effective_window_length){
+	double find_gaussian_std(const int dimension_length_pixels, \
+		 					 const double effective_window_length)
+	{
 			
 		// Initial guess of the standard deviation as half the effective window size.
 		double std_dev = 50.00 * effective_window_length;
@@ -111,14 +115,53 @@ namespace piv{
 	}
 
 	// This function generates a N-dimensional Gaussian apodization window
-	void make_gaussian_filter( double output_array[], 					\
-							   const int number_of_dimensions,  		\
-							   const int dimension_lengths[],   		\
-							   double effective_window_resolutions[])   \
+	void make_gaussian_filter_2D( cv::Mat &output_array, 		      \
+								  const int effective_window_width,   \
+								  const int effective_window_height)
 	{
-									  
+		
+		// Declare coordinates
+		double x, y;
+		
+		// Determine the dimensions of the region
+		const int num_rows = output_array.rows;
+		const int num_cols = output_array.cols;
+		
+		// Print number of rows and cols.
+		printf("Num rows: %d\n", num_rows);
+		printf("Num cols: %d\n", num_cols);
+		
+		// Determine the standard deviations of the Gaussian function
+		const double std_dev_y = find_gaussian_std(num_rows, effective_window_height);
+		const double std_dev_x = find_gaussian_std(num_cols, effective_window_width);
 				
+		// Determine the (non-integer) row and column position of the
+		// geometric centroid of the domain.
+		const double xc = (num_cols - 1.00) / 2.00;
+		const double yc = (num_rows - 1.00) / 2.00;
+		
+		// // Create arrays to hold the row and column Gaussian functions.	
+		cv::Mat gaussian_x(1, num_cols, CV_64FC1);
+		cv::Mat gaussian_y(num_rows, 1, CV_64FC1);
+		
+		// Populate the Gaussian function row vector.
+		for(int k = 0; k < num_rows; k++){
+			y = double(k) - yc;
+			gaussian_y.at<double>(k, 0) = exp(-1.00 * y * y / (2 * std_dev_y * std_dev_y) );			
+		}
+		
+		printf("Std dev y: %0.2f\n", std_dev_y);
+		
+		// Populate the Gaussian function row vector.
+		for(int k = 0; k < num_rows; k++){
+			x = double(k) - xc;
+			gaussian_x.at<double>(0, k) = exp(-1.00 * x * x / (2 * std_dev_x * std_dev_x) );			
+		}
+		
+		// Matrix multiply the column and row vectors together
+		// to create the 2D window.
+		output_array = gaussian_y * gaussian_x;
+		
 	}
-
 
 } // end namespace

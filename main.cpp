@@ -10,18 +10,26 @@ int main(int argc, char *argv[]){
 	cv::Mat image_02;
 	
 	// Define the region edges
-	const unsigned int grid_point_row = 600;
-	const unsigned int grid_point_col = 590;
+	const int grid_point_row = 400;
+	const int grid_point_col = 590;
 	
 	// Define subregion dimensions
-	const unsigned int sub_region_height = 128;
-	const unsigned int sub_region_width  = 128;
+	const int sub_region_height = 128;
+	const int sub_region_width  = 128;
+	
+	// Define subregion effective resolution
+	const int sub_region_effective_rows = 64;
+	const int sub_region_effective_cols = 64;
 	
 	// Read the first image.
 	image_01 = cv::imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
 	
 	// Read the second image
 	image_02 = cv::imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
+	
+	// Convert the images to doubles
+	image_01.convertTo(image_01, CV_64FC1);
+	image_02.convertTo(image_02, CV_64FC1);
 	
 	// Declare matrices to hold the interrogation regions.
 	cv::Mat sub_region_01(sub_region_height, sub_region_width, image_01.type());
@@ -30,34 +38,33 @@ int main(int argc, char *argv[]){
 	// Extract the first subregion.
 	piv::extract_subregion(image_01, sub_region_01, grid_point_row, grid_point_col, sub_region_height, sub_region_width);
 	
-	// Window the subregion
-	/* This is just a prototype!
-	piv::apodize_subregion(sub_region_01, sub_region_height, \\
-		sub_region_width, effective_window_height, effective_window_width); */
+	// Allocate matrix for the Gaussian window.
+	cv::Mat gaussian_window(sub_region_height, sub_region_width, sub_region_01.type());
 	
-	// Extract the second subregion
-	// piv::extract_subregion(image_02, sub_region_02, grid_point_row, grid_point_col, sub_region_height, sub_region_width);
+	// Create the Gaussian filter
+	piv::make_gaussian_filter_2D(gaussian_window, sub_region_effective_rows, sub_region_effective_cols);
 	
-	// Calculate the standard deviation of a Gaussian function.
-	double std_x = piv::find_gaussian_std((double)64, (double)32);
+	// Convert the subregion to the correct type
+	sub_region_01.convertTo(sub_region_01, gaussian_window.type());
 	
-	// Write the output to screen
-	std::cout << "Standard deviation: " << std_x << '\n';
+	// Filter the subregion
+	cv::Mat filtered_region(sub_region_height, sub_region_width, sub_region_01.type());	
 	
-	// Create a window for displaying the full image.
-	cv::namedWindow("full_image");
-
-	// Create a window for displaying the subregion.
-	cv::namedWindow("sub_region");
-
-	// Display the full image.
-	cv::imshow("full_image", image_01);
-
-	// Display the subregion.
-	cv::imshow("sub_region", sub_region_01);
-
+	// Multiply the filter by the subregion
+	filtered_region = sub_region_01.mul(gaussian_window);
+	
+	// Convert to 8 bit integer for displaying
+	filtered_region.convertTo(filtered_region, CV_8UC1);
+	
+	// Create a display window and display the windowed subregion.
+	cv::namedWindow("Filtered");
+	cv::imshow("Filtered", filtered_region);
+	
  	// Wait for a keystroke.
 	cv::waitKey(0);
+	
+	// Destroy the window!
+	cv::destroyWindow("Gaussian filter");
 		
 	// GTFO
 	return(0);
