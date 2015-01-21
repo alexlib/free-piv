@@ -125,11 +125,7 @@ namespace piv{
 		// Determine the dimensions of the region
 		const int num_rows = output_array.rows;
 		const int num_cols = output_array.cols;
-		
-		// Print number of rows and cols.
-		printf("Num rows: %d\n", num_rows);
-		printf("Num cols: %d\n", num_cols);
-		
+				
 		// Determine the standard deviations of the Gaussian function
 		const double std_dev_y = find_gaussian_std(num_rows, effective_window_height);
 		const double std_dev_x = find_gaussian_std(num_cols, effective_window_width);
