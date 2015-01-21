@@ -115,9 +115,8 @@ namespace piv{
 	}
 
 	// This function generates a 2-dimensional Gaussian apodization window
-	void make_gaussian_filter_2D( cv::Mat &output_array, 		      \
-								  const int effective_window_width,   \
-								  const int effective_window_height)
+	void make_gaussian_filter_2D( cv::Mat &output_array, \
+		const int effective_window_width, const int effective_window_height)
 	{
 		
 		// Declare coordinates
@@ -140,7 +139,7 @@ namespace piv{
 		const double xc = (num_cols - 1.00) / 2.00;
 		const double yc = (num_rows - 1.00) / 2.00;
 		
-		// // Create arrays to hold the row and column Gaussian functions.	
+		// Create arrays to hold the row and column Gaussian functions.	
 		cv::Mat gaussian_x(1, num_cols, CV_64FC1);
 		cv::Mat gaussian_y(num_rows, 1, CV_64FC1);
 		
@@ -149,9 +148,7 @@ namespace piv{
 			y = double(k) - yc;
 			gaussian_y.at<double>(k, 0) = exp(-1.00 * y * y / (2 * std_dev_y * std_dev_y) );			
 		}
-		
-		printf("Std dev y: %0.2f\n", std_dev_y);
-		
+				
 		// Populate the Gaussian function row vector.
 		for(int k = 0; k < num_rows; k++){
 			x = double(k) - xc;
@@ -161,7 +158,5 @@ namespace piv{
 		// Matrix multiply the column and row vectors together
 		// to create the 2D window.
 		output_array = gaussian_y * gaussian_x;
-		
 	}
-
 } // end namespace
