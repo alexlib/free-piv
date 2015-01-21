@@ -4,7 +4,6 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "gaussian_window.hpp"
 
-
 // Define a namespace called piv.
 namespace piv{
 
