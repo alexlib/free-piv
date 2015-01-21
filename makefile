@@ -1,6 +1,9 @@
 # Compiler
 CC = g++
 
+# General C flags
+CFLAGS_GEN = -ansi -Wall -pedantic
+
 # Link OpenCV
 CFLAGS_CV = `pkg-config opencv --cflags --libs`
 
@@ -14,7 +17,7 @@ PROGRAM = main
 EXT = cpp
 
 all:
-	$(CC) $(CFLAGS_CV) $(CFLAGS_CUDA) -o $(PROGRAM) $(PROGRAM).$(EXT)
+	$(CC) $(CFLAGS_GEN) $(CFLAGS_CV) $(CFLAGS_CUDA) -o $(PROGRAM) $(PROGRAM).$(EXT)
 	
 run:
 	@make clean

@@ -11,7 +11,7 @@ namespace piv{
 	/* This function extracts a subregion from an image. If the height or width of the interrogation are determined to lie outside
 	of the original image, then the interrogation region is padded with zeros where it extends beyond the image.
 	
-	SYNTAX: void extract_subregion(cv::Mat input_mat, cv::Mat output_mat, unsigned int grid_point_row, unsigned int grid_point_col, unsigned int 		sub_region_height, unsigned int sub_region_width)
+	SYNTAX: void extract_subregion(cv::Mat input_mat, cv::Mat output_mat, int grid_point_row, int grid_point_col, int 		sub_region_height, int sub_region_width)
 
 	INPUTS:
 		cv::Mat input_mat : Input image from which the interrogation region will be extracted. Can be color or grayscale.
@@ -19,18 +19,18 @@ namespace piv{
 		cv::Mat output_mat : This is the output matrix to which the interrogation region will be assigned.
 							This matrix should be of the same type as the variable input_mat.
 
-		unsigned int grid_point_row : This is the row position within the input image of the center of the interrogation region.
+		int grid_point_row : This is the row position within the input image of the center of the interrogation region.
 
-		unsigned int grid_point_col : This is the column position within the input image of the center of the interrogation region.
+		int grid_point_col : This is the column position within the input image of the center of the interrogation region.
 
-		unsigned int sub_region_height : This is the number of rows (i.e. the height in pixels) of the interrogation region.
+		int sub_region_height : This is the number of rows (i.e. the height in pixels) of the interrogation region.
 
-		unsigned int sub_region_width : This is the number of columns (i.e. the width in pixels) of the interrogation region.
+		int sub_region_width : This is the number of columns (i.e. the width in pixels) of the interrogation region.
 
 	OUTPUTS: 
 		None (void) */
 	
-	void extract_subregion(cv::Mat input_mat, cv::Mat output_mat, unsigned int grid_point_row, unsigned int grid_point_col, unsigned int sub_region_height, unsigned int sub_region_width){
+	void extract_subregion(cv::Mat input_mat, cv::Mat output_mat, int grid_point_row, int grid_point_col, int sub_region_height, int sub_region_width){
 			
 		// Measure the size of the input image
 		int image_rows = input_mat.rows;

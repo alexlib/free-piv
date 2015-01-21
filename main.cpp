@@ -30,8 +30,13 @@ int main(int argc, char *argv[]){
 	// Extract the first subregion.
 	piv::extract_subregion(image_01, sub_region_01, grid_point_row, grid_point_col, sub_region_height, sub_region_width);
 	
+	// Window the subregion
+	/* This is just a prototype!
+	piv::apodize_subregion(sub_region_01, sub_region_height, \\
+		sub_region_width, effective_window_height, effective_window_width); */
+	
 	// Extract the second subregion
-	// extract_subregion(image_02, sub_region_02, grid_point_row, grid_point_col, sub_region_height, sub_region_width);
+	// piv::extract_subregion(image_02, sub_region_02, grid_point_row, grid_point_col, sub_region_height, sub_region_width);
 	
 	// Calculate the standard deviation of a Gaussian function.
 	double std_x = piv::find_gaussian_std((double)64, (double)32);

@@ -1,19 +1,18 @@
 #include <iostream>
 #include <stdlib.h>
 #include <math.h>
+#include <vector>
 
 // Define a namespace called piv. 
 namespace piv{
 
 	// This function approximates an area integral using the Trapezoidal rule.
 	// The vector x must be increasing, but its values need not be evenly spaced.
-	double trapz(double x[], double y[], const int num_elements){
+	//double trapz(double x[], double y[], const int num_elements)
+	double trapz(std::vector<double> x, std::vector<double> y, const int num_elements){
 		
 		// Initialize the summed area as the first element in the y array
 		float sum = 0;
-		
-		// Declare the step size
-		double step_size = (x[num_elements - 1] - x[0]) / (num_elements - 1);
 		
 		// Declare the incremental area variable
 		double d_area;
@@ -45,13 +44,13 @@ namespace piv{
 		double domain_centroid = ((double) dimension_length_pixels - 1.00) / 2.00;
 	
 		// Declare the coordinate domain
-		double x[dimension_length_pixels];
+		std::vector<double> x(dimension_length_pixels, 0);
 		
-		// Declare gaussian
-		double g[dimension_length_pixels];	
+		// Declare gaussian function
+		std::vector<double> g(dimension_length_pixels, 0);
 		
 		// Populate the coordinate domain
-		for(unsigned int k = 0; k < dimension_length_pixels; k++){
+		for(int k = 0; k < dimension_length_pixels; k++){
 			x[k] = (double) k - domain_centroid;
 			g[k] = exp(-1.00 * x[k] * x[k] / (2 * std_dev * std_dev) );
 		}
@@ -94,7 +93,7 @@ namespace piv{
 			
 				// Now re-calculate the Gaussian function with the new standard deviation.
 				// Populate the coordinate domain
-				for(unsigned int k = 0; k < dimension_length_pixels; k++){
+				for(int k = 0; k < dimension_length_pixels; k++){
 					g[k] = exp(-1.00 * x[k] * x[k] / (2 * std_dev * std_dev) );
 				}
 			
@@ -110,5 +109,16 @@ namespace piv{
 		// Return the calculated standard deviation.
 		return(std_dev);
 	}
+
+	// This function generates a N-dimensional Gaussian apodization window
+	void make_gaussian_filter( double output_array[], 					\
+							   const int number_of_dimensions,  		\
+							   const int dimension_lengths[],   		\
+							   double effective_window_resolutions[])   \
+	{
+									  
+				
+	}
+
 
 } // end namespace
