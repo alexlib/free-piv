@@ -5,6 +5,12 @@
 
 int main(int argc, char *argv[]){
 	
+	// Make sure exactly one argument is specified
+	if(argc != 2){
+		std::cout << "Error: Specify image path as input argument.\n";
+		return(-1);
+	}
+	
 	// Declare matrices for the first and second images.
 	cv::Mat image_01;
 	cv::Mat image_02;
