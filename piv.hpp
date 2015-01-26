@@ -145,34 +145,47 @@ namespace piv{
 	
 	//void rpc_cpu(cv::Mat &correlation_plane, cv::Mat sub_region_01, cv::Mat sub_region_02, cv::Mat spectral_filter, int region_height, int region_width)
 	
-	void rpc_cpu(const int region_height, const int region_width){
+	void rpc_cpu(const int array_rows, const int array_cols){
 		// This function performs the RPC correlation on CPU. 
 		// Should write another version or adpt this for GPU.
 		
-		// Size of the data
-	
-		// Declare the input and output arrays
-		/* Problem: Compiler throwing warnings about forbidding variable size arrays
-			when I do "fftwf_complex fft_out[region_height][region_width]"
-			In any case, the FFTW plan creation won't end up inside of this function, 
-			but this problem will still need to be addressed. */ 
-		fftwf_complex fft_out[128][128];
-	
-		// Declare data
-		float input_array[128][128];
-	
+		
 		// Declare the fftw plan
-		fftwf_plan plan;
-	
+		fftw_plan plan;
+		
+		// Declare the complex FT output array 
+		fftw_complex *fft_out;
+		
+		/* Allocate memory for the FT 
+			Apparently there's no "new" method for fftw_complex?
+			This makes sense because I think FFTW3 is written in C
+			and not C++
+		*/
+		fft_out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * array_rows * array_cols);
+		
+		// Declare data
+		/* Even though we're using a 2D FT, I think the array has to be stored
+			as 1D. I think the indexing is taken care of by the 
+			input arguments NX and NY to fftw_plan_dft_r2c_2d
+		*/
+		double *input_array = new double[array_rows * array_cols];
+		
+		// Populate the data array. This is just arbitrary data.
+		for(int i = 0; i < array_rows; i++){
+			for(int j = 0; j < array_cols; j++){
+				input_array[i * array_cols + j] = (double)i * (double)j;
+			}
+		}
+		
 		// Create the FFT plan
-		plan = fftwf_plan_dft_r2c_2d(region_width, region_height, &input_array[0][0], &fft_out[0][0], FFTW_PATIENT);
-	
+		plan = fftw_plan_dft_r2c_2d(array_cols, array_rows, input_array, fft_out, FFTW_PATIENT);
+		
 		// This destroys the FFTW plan.
-		fftwf_destroy_plan(plan);
-			
+		fftw_destroy_plan(plan);
+		
+		// Delete the input array
+		delete[] input_array;			
 	}
-	
-	
 } // End namespace
 
 
