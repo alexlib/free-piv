@@ -62,15 +62,8 @@ int main(int argc, char *argv[]){
 	// Convert to 8 bit integer for displaying
 	filtered_region.convertTo(filtered_region, CV_8UC1);
 	
-	// Create a display window and display the windowed subregion.
-	cv::namedWindow("Filtered");
-	cv::imshow("Filtered", filtered_region);
-	
- 	// Wait for a keystroke.
-	cv::waitKey(0);
-	
-	// Destroy the window!
-	cv::destroyWindow("Gaussian filter");
+	// Call the RPC code.
+	piv::rpc_cpu(sub_region_height, sub_region_width);
 		
 	// GTFO
 	return(0);

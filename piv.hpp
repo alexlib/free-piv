@@ -1,8 +1,10 @@
 #include <iostream>
 #include <math.h>
+#include <vector>
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "gaussian_window.hpp"
+#include "fftw3.h"
 
 // Define a namespace called piv.
 namespace piv{
@@ -140,6 +142,37 @@ namespace piv{
 		cv::copyMakeBorder(sub_region_temp, output_mat, pad_size_top, pad_size_bottom, pad_size_left, pad_size_right, cv::BORDER_CONSTANT, 0);
 				
 	} //end extract_subregion
+	
+	//void rpc_cpu(cv::Mat &correlation_plane, cv::Mat sub_region_01, cv::Mat sub_region_02, cv::Mat spectral_filter, int region_height, int region_width)
+	
+	void rpc_cpu(const int region_height, const int region_width){
+		// This function performs the RPC correlation on CPU. 
+		// Should write another version or adpt this for GPU.
+		
+		// Size of the data
+	
+		// Declare the input and output arrays
+		/* Problem: Compiler throwing warnings about forbidding variable size arrays
+			when I do "fftwf_complex fft_out[region_height][region_width]"
+			In any case, the FFTW plan creation won't end up inside of this function, 
+			but this problem will still need to be addressed. */ 
+		fftwf_complex fft_out[128][128];
+	
+		// Declare data
+		float input_array[128][128];
+	
+		// Declare the fftw plan
+		fftwf_plan plan;
+	
+		// Create the FFT plan
+		plan = fftwf_plan_dft_r2c_2d(region_width, region_height, &input_array[0][0], &fft_out[0][0], FFTW_PATIENT);
+	
+		// This destroys the FFTW plan.
+		fftwf_destroy_plan(plan);
+			
+	}
+	
+	
 } // End namespace
 
 
